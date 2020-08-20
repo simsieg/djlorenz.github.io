@@ -1,409 +1,153 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Light Pollution Atlas 2006</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="L.Control.Range.css" />
+
     <style>
-      html, body, #map-canvas {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-    </style>
-    <script type="text/javascript" src="ExtDraggableObject.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <script>
-var map, overlay;
-var initialOpacity = 0.5;
-var OPACITY_MAX_PIXELS = 57; // Width of opacity control image
-
-function HomeControl(controlDiv, map) {
-
-  // Set CSS styles for the DIV containing the control
-  // Setting padding to 5 px will offset the control
-  // from the edge of the map
-  controlDiv.style.padding = '5px';
-
-  // Set CSS for the control border
-  var controlUI = document.createElement('div');
-  controlUI.style.backgroundColor = 'white';
-  controlUI.style.borderStyle = 'solid';
-  controlUI.style.borderWidth = '2px';
-  controlUI.style.cursor = 'pointer';
-  controlUI.style.textAlign = 'center';
-  controlUI.title = 'Click for more Information';
-  controlDiv.appendChild(controlUI);
-
-  // Set CSS for the control interior
-  var controlText = document.createElement('div');
-  controlText.style.fontFamily = 'Arial,sans-serif';
-  controlText.style.fontSize = '14px';
-  controlText.style.color = 'blue';
-  controlText.style.paddingLeft = '4px';
-  controlText.style.paddingRight = '4px';
-  controlText.innerHTML = '<b>More Information</b>';
-  controlUI.appendChild(controlText);
-
-  // Setup the click event listeners
-  google.maps.event.addDomListener(controlUI, 'click', function() {
-    var url = "http://djlorenz.github.io/astronomy/lp2006/";
-    window.open(url);
-  });
-
-}
-
-function initialize() {
-  var mapOptions = {
-    zoom: 3,
-    maxZoom: 17,
-    center: new google.maps.LatLng(5, 0),
-    scaleControl: true,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-  map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
-
-  var bounds = {
-     0: [[0,  0], [0, 0]],
-     1: [[0,  1], [0, 1]],
-     2: [[0,  3], [0, 2]],
-     3: [[0,  7], [1, 5]],
-     4: [[0, 15], [2, 11]],
-     5: [[0, 31], [5, 23]],
-     6: [[0, 63], [11,47]]
-  };
-
-  var zoomLevel = 1;
-  var first = 1;
-
-  var overlayfull = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 2;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(1024, 1024)
-  });
-
-  var overlay9 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 3;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(2048, 2048)
-  });
-
-  var overlay10 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 4;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(4096, 4096)
-  });
-
-  var overlay11 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 5;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(8192, 8192)
-  });
-
-  var overlay12 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 6;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(16384, 16384)
-  });
-
-  var overlay13 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 7;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(32768, 32768)
-  });
-
-  var overlay14 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 8;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(65536, 65536)
-  });
-
-  var overlay15 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 9;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(131072, 131072)
-  });
-
-  var overlay16 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 10;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(262144, 262144)
-  });
-
-  var overlay17 = new google.maps.ImageMapType({
-    getTileUrl: function(coord, zoom) {
-       var zoom2 = zoom - 11;
-       var x = coord.x % Math.pow(2,zoom2);
-       if( x < 0 )
-       {
-          x = x + Math.pow(2,zoom2);
-       }
-      if (zoom2 < 0 ||
-          bounds[zoom2][0][0] > x || x > bounds[zoom2][0][1] ||
-          bounds[zoom2][1][0] > coord.y || coord.y > bounds[zoom2][1][1]) {
-        return null;
-      }
-       return "tiles/tile_" + zoom2 + "_" + x + "_" + coord.y + ".png";
-                },
-    tileSize: new google.maps.Size(524288, 524288)
-  });
-
-  google.maps.event.addListener(map, 'zoom_changed', function() {
-    var prevZoomLevel;
-    prevZoomLevel = zoomLevel;
-    var z = map.getZoom();
-    z < 9 ? zoomLevel = 1 : zoomLevel = 2;
-    console.log(z);
-    if (prevZoomLevel !== zoomLevel || zoomLevel == 2) {
-    switch (z)
-    {
-    case 9:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay9);
-       overlay = overlay9
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 10:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay10);
-       overlay = overlay10
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 11:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay11);
-       overlay = overlay11
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 12:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay12);
-       overlay = overlay12
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 13:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay13);
-       overlay = overlay13
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 14:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay14);
-       overlay = overlay14
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 15:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay15);
-       overlay = overlay15
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 16:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay16);
-       overlay = overlay16
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    case 17:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlay17);
-       overlay = overlay17
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    default:
-       map.overlayMapTypes.removeAt(0);
-       map.overlayMapTypes.insertAt(0, overlayfull);
-       overlay = overlayfull
-       setOpacity(opacityCtrlKnob.valueX());
-       break;
-    }
-
-    }
-  });
-
-  overlay = overlayfull
-  createOpacityControl(map);
-  map.overlayMapTypes.insertAt(0, overlayfull);
-
-  var homeControlDiv = document.createElement('div');
-  var homeControl = new HomeControl(homeControlDiv, map);
-
-  homeControlDiv.index = 1;
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(homeControlDiv);
-
-}
-
-function createOpacityControl(map) {
-        var sliderImageUrl = "opacity-slider3d7.png";
-
-        // Create main div to hold the control.
-        var opacityDiv = document.createElement('DIV');
-        opacityDiv.setAttribute("style", "margin:5px;overflow-x:hidden;overflow-y:hidden;background:url(" + sliderImageUrl + ") no-repeat;width:71px;height:21px;cursor:pointer;");
-
-        // Create knob
-        var opacityKnobDiv = document.createElement('DIV');
-        opacityKnobDiv.setAttribute("style", "padding:0;margin:0;overflow-x:hidden;overflow-y:hidden;background:url(" + sliderImageUrl + ") no-repeat -71px 0;width:14px;height:21px;");
-        opacityDiv.appendChild(opacityKnobDiv);
-
-        // no var => global variable
-        opacityCtrlKnob = new ExtDraggableObject(opacityKnobDiv, {
-                restrictY: true,
-                container: opacityDiv
-        });
-
-        google.maps.event.addListener(opacityCtrlKnob, "dragend", function () {
-                setOpacity(opacityCtrlKnob.valueX());
-        });
-
-        google.maps.event.addDomListener(opacityDiv, "click", function (e) {
-                var left = findPosLeft(this);
-                var x = e.pageX - left - 5; // - 5 as we're using a margin of 5px on the div
-                opacityCtrlKnob.setValueX(x);
-                setOpacity(x);
-        });
-
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(opacityDiv);
-
-        // Set initial value
-        var initialValue = OPACITY_MAX_PIXELS*initialOpacity;
-        opacityCtrlKnob.setValueX(initialValue);
-        setOpacity(initialValue);
-}
-
-function setOpacity(pixelX) {
-        // Range = 0 to OPACITY_MAX_PIXELS
-        var value = pixelX / OPACITY_MAX_PIXELS ;
-        if (value < 0) value = 0;
-        if (value > 1) value = 1;
-        overlay.setOpacity(value);
-}
-
-function findPosLeft(obj) {
-        var curleft = 0;
-        if (obj.offsetParent) {
-                do {
-                        curleft += obj.offsetLeft;
-                } while (obj = obj.offsetParent);
-                return curleft;
+        body {
+            padding: 0;
+            margin: 0;
         }
-        return undefined;
-}
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 
-google.maps.event.addDomListener(window, 'load', initialize);
+</head>
+<body>
 
-    </script>
-  </head>
-  <body>
-    <div id="map-canvas"></div>
-  </body>
+    <div id="slide"></div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="L.Control.Range.js"></script>
+
+    
+    <script>
+      var map = L.map('map').setView([0, 0], 2);
+      mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+      infoLink = '<a href="http://djlorenz.github.io/astronomy/lp2006/">Light Pollution Atlas Information</a>';
+      var lightpollution = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 2,
+           maxZoom: 9,
+           tileSize: 1024,
+           zoomOffset: -2,
+           opacity: 0.5
+          })
+      var lightpollution10 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 10,
+           maxZoom: 10,
+           tileSize: 2048,
+           zoomOffset: -3,
+           opacity: 0.5
+          })
+      var lightpollution11 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 11,
+           maxZoom: 11,
+           tileSize: 4096,
+           zoomOffset: -4,
+           opacity: 0.5
+          })
+      var lightpollution12 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 12,
+           maxZoom: 12,
+           tileSize: 8192,
+           zoomOffset: -5,
+           opacity: 0.5
+          })
+      var lightpollution13 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 13,
+           maxZoom: 13,
+           tileSize: 16384,
+           zoomOffset: -6,
+           opacity: 0.5
+          })
+      var lightpollution14 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 14,
+           maxZoom: 14,
+           tileSize: 32768,
+           zoomOffset: -7,
+           opacity: 0.5
+          })
+      var lightpollution15 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 15,
+           maxZoom: 15,
+           tileSize: 65536,
+           zoomOffset: -8,
+           opacity: 0.5
+          })
+      var lightpollution16 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 16,
+           maxZoom: 16,
+           tileSize: 131072,
+           zoomOffset: -9,
+           opacity: 0.5
+          })
+      var lightpollution17 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 17,
+           maxZoom: 17,
+           tileSize: 262144,
+           zoomOffset: -10,
+           opacity: 0.5
+          })
+      layers:[
+        L.tileLayer(
+          'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; ' + mapLink + ' Contributors | ' + infoLink,
+          maxZoom: 17,
+          }).addTo(map),
+          lightpollution.addTo(map),
+          lightpollution10.addTo(map),
+          lightpollution11.addTo(map),
+          lightpollution12.addTo(map),
+          lightpollution13.addTo(map),
+          lightpollution14.addTo(map),
+          lightpollution15.addTo(map),
+          lightpollution16.addTo(map),
+          lightpollution17.addTo(map)
+         ]
+
+        var control = L.control.range({
+            position: 'topright',
+            min: 0,
+            max: 100,
+            value: 50,
+            step: 1,
+            orient: 'vertical',
+            icon: false
+        });
+        control.on('change input', function(e) {
+            console.log(e.value);
+            lightpollution.setOpacity(e.value / 100);
+            lightpollution10.setOpacity(e.value / 100);
+            lightpollution11.setOpacity(e.value / 100);
+            lightpollution12.setOpacity(e.value / 100);
+            lightpollution13.setOpacity(e.value / 100);
+            lightpollution14.setOpacity(e.value / 100);
+            lightpollution15.setOpacity(e.value / 100);
+            lightpollution16.setOpacity(e.value / 100);
+            lightpollution17.setOpacity(e.value / 100);
+        })
+
+        map.addControl(control);
+
+
+
+   </script>
+
+</body>
 </html>
