@@ -35,72 +35,80 @@
       var lightpollution = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 2,
-           maxZoom: 9,
+           maxZoom: 8,
            tileSize: 1024,
            zoomOffset: -2,
+           opacity: 0.5
+          })
+      var lightpollution9 = L.tileLayer(
+          'tiles/tile_{z}_{x}_{y}.png', {
+           minZoom: 9,
+           maxZoom: 9,
+           tileSize: 2048,
+           zoomOffset: -3,
            opacity: 0.5
           })
       var lightpollution10 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 10,
            maxZoom: 10,
-           tileSize: 2048,
-           zoomOffset: -3,
+           tileSize: 4096,
+           zoomOffset: -4,
            opacity: 0.5
           })
       var lightpollution11 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 11,
            maxZoom: 11,
-           tileSize: 4096,
-           zoomOffset: -4,
+           tileSize: 8192,
+           zoomOffset: -5,
            opacity: 0.5
           })
       var lightpollution12 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 12,
            maxZoom: 12,
-           tileSize: 8192,
-           zoomOffset: -5,
+           tileSize: 16384,
+           zoomOffset: -6,
            opacity: 0.5
           })
       var lightpollution13 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 13,
            maxZoom: 13,
-           tileSize: 16384,
-           zoomOffset: -6,
+           tileSize: 32768,
+           zoomOffset: -7,
            opacity: 0.5
           })
       var lightpollution14 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 14,
            maxZoom: 14,
-           tileSize: 32768,
-           zoomOffset: -7,
+           tileSize: 65536,
+           zoomOffset: -8,
            opacity: 0.5
           })
       var lightpollution15 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 15,
            maxZoom: 15,
-           tileSize: 65536,
-           zoomOffset: -8,
+           tileSize: 131072,
+           zoomOffset: -9,
            opacity: 0.5
           })
       var lightpollution16 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 16,
            maxZoom: 16,
-           tileSize: 131072,
-           zoomOffset: -9,
+           tileSize: 262144,
+           zoomOffset: -10,
            opacity: 0.5
           })
       var lightpollution17 = L.tileLayer(
           'tiles/tile_{z}_{x}_{y}.png', {
            minZoom: 17,
            maxZoom: 17,
-           tileSize: 262144,
+           tileSize: 524288,
            zoomOffset: -10,
            opacity: 0.5
           })
@@ -111,6 +119,7 @@
           maxZoom: 17,
           }).addTo(map),
           lightpollution.addTo(map),
+          lightpollution9.addTo(map),
           lightpollution10.addTo(map),
           lightpollution11.addTo(map),
           lightpollution12.addTo(map),
@@ -133,6 +142,7 @@
         control.on('change input', function(e) {
             console.log(e.value);
             lightpollution.setOpacity(e.value / 100);
+            lightpollution9.setOpacity(e.value / 100);
             lightpollution10.setOpacity(e.value / 100);
             lightpollution11.setOpacity(e.value / 100);
             lightpollution12.setOpacity(e.value / 100);
