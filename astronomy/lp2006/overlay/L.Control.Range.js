@@ -30,12 +30,14 @@ L.Control.Range = L.Control.extend({
          * it's too late becuase the event seems to go to the map first, which results in any subsequent motion
          * resulting in map movement even after map.dragging.disable() is called.
          */
-        L.DomEvent.on(slider, 'mouseenter', function(e) {
-            map.dragging.disable()
-        });
-        L.DomEvent.on(slider, 'mouseleave', function(e) {
-            map.dragging.enable();
-        });
+	if (window.document.documentMode) {
+            L.DomEvent.on(slider, 'mouseenter', function(e) {
+		map.dragging.disable()
+            });
+            L.DomEvent.on(slider, 'mouseleave', function(e) {
+		map.dragging.enable();
+            });
+	}
 
         L.DomEvent.on(slider, 'change', function(e) {
             this.fire('change', {value: e.target.value});
